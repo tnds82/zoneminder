@@ -8,7 +8,7 @@ COPY zmeventnotification/zmeventnotification.pl /usr/bin/
 COPY zmeventnotification/zmeventnotification.ini /root/
 
 RUN apt-get update && \
-	apt-get install software-properties-common && \
+	apt-get install software-properties-common -y && \
         add-apt-repository -y ppa:iconnor/zoneminder && \
 	apt-get update && \
 	apt-get upgrade -y -o Dpkg::Options::="--force-confold" && \
