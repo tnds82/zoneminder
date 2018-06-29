@@ -1,10 +1,6 @@
-FROM dlandon/baseimage
+FROM ubuntu:16.04
 
-LABEL maintainer="dlandon"
-
-ENV	SHMEM="50%" \
-	PUID="99" \
-	PGID="100"
+LABEL maintainer="tnds82"
 
 COPY init/ /etc/my_init.d/
 COPY defaults/ /root/
