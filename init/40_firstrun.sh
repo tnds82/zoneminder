@@ -110,7 +110,7 @@ else
 	echo "Using existing data directory for events"
 
 	# Check the ownership on the /var/cache/zoneminder/events directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/events` != 'root:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/events` != 'www-data:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/events ownership..."
 		chown -R www-data:www-data /var/cache/zoneminder/events
 	fi
@@ -132,7 +132,7 @@ else
 	echo "Using existing data directory for images"
 
 	# Check the ownership on the /var/cache/zoneminder/images directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/images` != 'root:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/images` != 'www-data:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/images ownership..."
 		chown -R www-data:www-data /var/cache/zoneminder/images
 	fi
@@ -154,7 +154,7 @@ else
 	echo "Using existing data directory for temp"
 
 	# Check the ownership on the /var/cache/zoneminder/temp directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/temp` != 'root:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/temp` != 'www-data:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/temp ownership..."
 		chown -R www-data:www-data /var/cache/zoneminder/temp
 	fi
