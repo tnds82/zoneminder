@@ -1,15 +1,17 @@
-FROM ubuntu:16.04
+FROM dlandon/baseimage
 
-LABEL maintainer="tnds82"
+LABEL maintainer="dlandon"
+
+ENV	SHMEM="50%" \
+	PUID="99" \
+	PGID="100"
 
 COPY init/ /etc/my_init.d/
 COPY defaults/ /root/
 COPY zmeventnotification/zmeventnotification.pl /usr/bin/
 COPY zmeventnotification/zmeventnotification.ini /root/
 
-RUN apt-get update && \
-	apt-get install -y software-properties-common && \
-        add-apt-repository -y ppa:iconnor/zoneminder && \
+RUN add-apt-repository -y ppa:iconnor/zoneminder && \
 	apt-get update && \
 	apt-get upgrade -y -o Dpkg::Options::="--force-confold" && \
 	apt-get dist-upgrade -y && \
