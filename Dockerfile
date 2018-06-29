@@ -10,4 +10,4 @@ COPY zmeventnotification/zmeventnotification.ini /root/
 RUN add-apt-repository -y ppa:iconnor/zoneminder && \
 	apt-get update && \
 	apt-get upgrade -y -o Dpkg::Options::="--force-confold" && \
-	apt-get dist-upgrade -y && \
+	apt-get dist-upgrade -y
