@@ -187,5 +187,28 @@ zmupdate.pl -nointeractive
 zmupdate.pl -f
 
 a2enmod ssl >/dev/null
+
+org_zm='    Alias /zm/ "/usr/share/zoneminder/www/"'
+rep_zm='    Alias / "/usr/share/zoneminder/www/"'
+org_dr='        DocumentRoot /var/www/html'
+rep_dr='        DocumentRoot /usr/share/zoneminder/www'
+
+# Search for zoneminder config file
+if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
+        apt install -y nano
+        echo "Copying zoneminder.conf"
+        # remove zoneinder.conf from conf-enabled
+        rm -rf /etc/apache2/conf-enabled/zoneminder.conf
+        # copy the zoneminder.conf to sites-available
+        cp -v /usr/share/doc/zoneminder/examples/apache.conf /etc/apache2/sites-available/zoneminder.conf
+        # remove alias /zm
+        sed -i "s~$org_zm~$rep_zm~" /etc/apache2/sites-available/zoneminder.conf
+        sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
+        # activate zoneminder.conf
+        echo "Activate zoneminder"
+        a2ensite zoneminder.conf
+else
+        echo "File zoneminder.conf already exists"
+
 service apache2 start
 service zoneminder start
