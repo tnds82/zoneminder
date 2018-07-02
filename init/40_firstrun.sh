@@ -190,8 +190,8 @@ a2enmod ssl >/dev/null
 
 org_zm='    Alias /zm/ "/usr/share/zoneminder/www/"'
 rep_zm='    Alias / "/usr/share/zoneminder/www/"'
-org_dr='        DocumentRoot /var/www/html'
-rep_dr='        DocumentRoot /usr/share/zoneminder/www'
+org_dr='/var/www/html'
+rep_dr='/usr/share/zoneminder/www'
 
 # Search for zoneminder config file
 if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
@@ -202,6 +202,7 @@ if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
         # copy the zoneminder.conf to sites-available
         cp -v /usr/share/doc/zoneminder/examples/apache.conf /etc/apache2/sites-available/zoneminder.conf
         # remove alias /zm
+	echo "Remove alias /zm"
         sed -i "s~$org_zm~$rep_zm~" /etc/apache2/sites-available/zoneminder.conf
         sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
         # activate zoneminder.conf
