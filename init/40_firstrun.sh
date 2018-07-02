@@ -209,6 +209,6 @@ if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
         a2ensite zoneminder.conf
 else
         echo "File zoneminder.conf already exists"
-
+fi
 service apache2 start
 service zoneminder start
