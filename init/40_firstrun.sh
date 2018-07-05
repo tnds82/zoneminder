@@ -179,6 +179,7 @@ cp /config/zmeventnotification.ini /etc/
 echo "Setting shared memory to : $SHMEM of `awk '/MemTotal/ {print $2}' /proc/meminfo` bytes"
 umount /dev/shm
 mount -t tmpfs -o rw,nosuid,nodev,noexec,relatime,size=${SHMEM} tmpfs /dev/shm
+chown www-data:www-data /dev/shm
 
 echo "Starting services"
 service mysql start
