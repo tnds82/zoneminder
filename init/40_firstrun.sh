@@ -166,29 +166,13 @@ else
 	fi
 fi
 
-# Search for zoneminder config file
-if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
-        org_zm='    Alias /zm/ "/usr/share/zoneminder/www/"'
-        rep_zm='    Alias / "/usr/share/zoneminder/www/"'
-        org_dr='/var/www/html'
-        rep_dr='/usr/share/zoneminder/www'
-
-        apt install -y nano
-        echo "Copying zoneminder.conf"
-        # remove zoneinder.conf from conf-enabled
-        rm -rf /etc/apache2/conf-enabled/zoneminder.conf
-        # copy the zoneminder.conf to sites-available
-        cp -v /usr/share/doc/zoneminder/examples/apache.conf /etc/apache2/sites-available/zoneminder.conf
-        # remove alias /zm
-	echo "Remove alias /zm"
-        sed -i "s~$org_zm~$rep_zm~" /etc/apache2/sites-available/zoneminder.conf
-        sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
-        # activate zoneminder.conf
-        echo "Activate zoneminder"
-        a2ensite zoneminder.conf
-else
-        echo "File zoneminder.conf already exists"
-fi
+ org_zm='    Alias /zm/ /usr/share/zoneminder/www/'
+ rep_zm='#    Alias /zm /usr/share/zoneminder/www/'
+ # install nano
+ apt install -y nano
+ # remove alias zm
+ echo "Removing Alias zm"
+ sed -i "s~$org_zm~$rep_zm~" /etc/apache2/conf-enabled/zoneminder.conf
 
 # set user crontab entries
 crontab -r -u root
