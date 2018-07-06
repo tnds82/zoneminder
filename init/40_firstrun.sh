@@ -104,15 +104,15 @@ chown -R $PUID:$PGID /config/skins
 if [ ! -d /var/cache/zoneminder/events ]; then
 	echo "Create events folder"
 	mkdir /var/cache/zoneminder/events
-	chown -R www-data:www-data /var/cache/zoneminder/events
+	chown -R root:www-data /var/cache/zoneminder/events
 	chmod -R 777 /var/cache/zoneminder/events
 else
 	echo "Using existing data directory for events"
 
 	# Check the ownership on the /var/cache/zoneminder/events directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/events` != 'www-data:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/events` != 'root:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/events ownership..."
-		chown -R www-data:www-data /var/cache/zoneminder/events
+		chown -R root:www-data /var/cache/zoneminder/events
 	fi
 
 	# Check the permissions on the /var/cache/zoneminder/events directory
@@ -126,15 +126,15 @@ fi
 if [ ! -d /var/cache/zoneminder/images ]; then
 	echo "Create images folder"
 	mkdir /var/cache/zoneminder/images
-	chown -R www-data:www-data /var/cache/zoneminder/images
+	chown -R root:www-data /var/cache/zoneminder/images
 	chmod -R 777 /var/cache/zoneminder/images
 else
 	echo "Using existing data directory for images"
 
 	# Check the ownership on the /var/cache/zoneminder/images directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/images` != 'www-data:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/images` != 'root:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/images ownership..."
-		chown -R www-data:www-data /var/cache/zoneminder/images
+		chown -R root:www-data /var/cache/zoneminder/images
 	fi
 
 	# Check the permissions on the /var/cache/zoneminder/images directory
@@ -148,15 +148,15 @@ fi
 if [ ! -d /var/cache/zoneminder/temp ]; then
 	echo "Create temp folder"
 	mkdir /var/cache/zoneminder/temp
-	chown -R www-data:www-data /var/cache/zoneminder/temp
+	chown -R root:www-data /var/cache/zoneminder/temp
 	chmod -R 777 /var/cache/zoneminder/temp
 else
 	echo "Using existing data directory for temp"
 
 	# Check the ownership on the /var/cache/zoneminder/temp directory
-	if [ `stat -c '%U:%G' /var/cache/zoneminder/temp` != 'www-data:www-data' ]; then
+	if [ `stat -c '%U:%G' /var/cache/zoneminder/temp` != 'root:www-data' ]; then
 		echo "Correcting /var/cache/zoneminder/temp ownership..."
-		chown -R www-data:www-data /var/cache/zoneminder/temp
+		chown -R root:www-data /var/cache/zoneminder/temp
 	fi
 
 	# Check the permissions on the /var/cache/zoneminder/temp directory
@@ -164,6 +164,25 @@ else
 		echo "Correcting /var/cache/zoneminder/temp permissions..."
 		chmod -R 777 /var/cache/zoneminder/temp
 	fi
+fi
+
+# Search for zoneminder config file
+if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
+        apt install -y nano
+        echo "Copying zoneminder.conf"
+        # remove zoneinder.conf from conf-enabled
+        rm -rf /etc/apache2/conf-enabled/zoneminder.conf
+        # copy the zoneminder.conf to sites-available
+        cp -v /usr/share/doc/zoneminder/examples/apache.conf /etc/apache2/sites-available/zoneminder.conf
+        # remove alias /zm
+	echo "Remove alias /zm"
+        sed -i "s~$org_zm~$rep_zm~" /etc/apache2/sites-available/zoneminder.conf
+        sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
+        # activate zoneminder.conf
+        echo "Activate zoneminder"
+        a2ensite zoneminder.conf
+else
+        echo "File zoneminder.conf already exists"
 fi
 
 # set user crontab entries
@@ -187,29 +206,5 @@ zmupdate.pl -nointeractive
 zmupdate.pl -f
 
 a2enmod ssl >/dev/null
-
-org_zm='    Alias /zm/ "/usr/share/zoneminder/www/"'
-rep_zm='    Alias / "/usr/share/zoneminder/www/"'
-org_dr='/var/www/html'
-rep_dr='/usr/share/zoneminder/www'
-
-# Search for zoneminder config file
-if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
-        apt install -y nano
-        echo "Copying zoneminder.conf"
-        # remove zoneinder.conf from conf-enabled
-        rm -rf /etc/apache2/conf-enabled/zoneminder.conf
-        # copy the zoneminder.conf to sites-available
-        cp -v /usr/share/doc/zoneminder/examples/apache.conf /etc/apache2/sites-available/zoneminder.conf
-        # remove alias /zm
-	echo "Remove alias /zm"
-        sed -i "s~$org_zm~$rep_zm~" /etc/apache2/sites-available/zoneminder.conf
-        sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
-        # activate zoneminder.conf
-        echo "Activate zoneminder"
-        a2ensite zoneminder.conf
-else
-        echo "File zoneminder.conf already exists"
-fi
 service apache2 start
 service zoneminder start
