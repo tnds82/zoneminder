@@ -166,13 +166,16 @@ else
 	fi
 fi
 
- org_zm='    Alias /zm/ /usr/share/zoneminder/www/'
- rep_zm='#    Alias /zm /usr/share/zoneminder/www/'
- # install nano
- apt install -y nano
- # remove alias zm
- echo "Removing Alias zm"
- sed -i "s~$org_zm~$rep_zm~" /etc/apache2/conf-enabled/zoneminder.conf
+org_zm='Alias /zm /usr/share/zoneminder/www'
+rep_zm='#Alias /zm /usr/share/zoneminder/www'
+org_dr='/var/www/html'
+rep_dr='/usr/share/zoneminder/www'
+# install nano
+apt install -y nano
+# remove alias zm
+echo "Removing Alias zm"
+sed -i "s~$org_zm~$rep_zm~" /etc/apache2/conf-available/zoneminder.conf
+sed -i "s~$org_dr~$rep_dr~" /etc/apache2/sites-available/000-default.conf
 
 # set user crontab entries
 crontab -r -u root
