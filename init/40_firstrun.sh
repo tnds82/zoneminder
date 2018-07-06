@@ -168,6 +168,11 @@ fi
 
 # Search for zoneminder config file
 if [ ! -f /etc/apache2/sites-available/zoneminder.conf ]; then
+        org_zm='    Alias /zm/ "/usr/share/zoneminder/www/"'
+        rep_zm='    Alias / "/usr/share/zoneminder/www/"'
+        org_dr='/var/www/html'
+        rep_dr='/usr/share/zoneminder/www'
+
         apt install -y nano
         echo "Copying zoneminder.conf"
         # remove zoneinder.conf from conf-enabled
